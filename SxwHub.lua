@@ -1,90 +1,149 @@
--- Sxw Hub Menu Modern UI
+--== SxwHub - Interface inspirée de ton image (vert + jaune) ==--
+
 local TweenService = game:GetService("TweenService")
+
 local gui = Instance.new("ScreenGui")
-gui.Name = "SxwHubModern"
+gui.Name = "SxwHub_UI"
 gui.ResetOnSpawn = false
 gui.Parent = game:GetService("CoreGui")
 
--- Protection pour Synapse / autres exploiters
 if syn and syn.protect_gui then
     syn.protect_gui(gui)
 end
 
--- Fonction utilitaire pour créer des boutons stylés
-local function MakeBtn(name, y, parent, callback)
-    local btn = Instance.new("TextButton")
-    btn.Parent = parent
-    btn.Size = UDim2.new(1, -20, 0, 40)
-    btn.Position = UDim2.new(0, 10, 0, y)
-    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+--------------------------------------
+-- STYLE DES BOUTONS (GROS + ARRONDIS)
+--------------------------------------
+local function MakeBigButton(parent, text, callback)
+    local btn = Instance.new("TextButton", parent)
+    btn.Size = UDim2.new(1, -30, 0, 55)
+    btn.BackgroundColor3 = Color3.fromRGB(25, 100, 35)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 16
-    btn.Text = name
+    btn.TextSize = 22
+    btn.Text = text
     btn.BorderSizePixel = 0
-    btn.AutoButtonColor = false
 
-    -- Coin arrondi
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 10)
-    corner.Parent = btn
+    local corner = Instance.new("UICorner", btn)
+    corner.CornerRadius = UDim.new(0, 14)
 
-    -- Hover animation
+    local stroke = Instance.new("UIStroke", btn)
+    stroke.Thickness = 3
+    stroke.Color = Color3.fromRGB(255, 210, 50)
+
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
-    end)
-    btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.15), {
+            BackgroundColor3 = Color3.fromRGB(35, 140, 45)
+        }):Play()
     end)
 
-    -- Click event
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.15), {
+            BackgroundColor3 = Color3.fromRGB(25, 100, 35)
+        }):Play()
+    end)
+
     btn.MouseButton1Click:Connect(callback)
 end
 
--- Cadre principal
-local frame = Instance.new("Frame")
-frame.Parent = gui
-frame.Size = UDim2.new(0, 220, 0, 200)
-frame.Position = UDim2.new(0.05, 0, 0.4, 0)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-frame.BorderSizePixel = 0
-frame.Visible = false
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 15)
-corner.Parent = frame
+------------------------------
+-- TOGGLES TYPE ON / OFF
+------------------------------
+local function MakeToggle(parent, text, callback)
+    local toggle = Instance.new("TextButton", parent)
+    toggle.Size = UDim2.new(1, -30, 0, 50)
+    toggle.BackgroundColor3 = Color3.fromRGB(25, 100, 35)
+    toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggle.Font = Enum.Font.GothamBold
+    toggle.TextSize = 20
+    toggle.Text = text .. ": OFF"
+    toggle.BorderSizePixel = 0
 
--- Bouton principal
-local mainBtn = Instance.new("TextButton")
-mainBtn.Parent = gui
-mainBtn.Size = UDim2.new(0, 70, 0, 40)
-mainBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
-mainBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-mainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-mainBtn.Font = Enum.Font.GothamBold
-mainBtn.TextSize = 20
-mainBtn.Text = "Sxw"
-mainBtn.BorderSizePixel = 0
+    local corner = Instance.new("UICorner", toggle)
+    corner.CornerRadius = UDim.new(0, 14)
 
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 12)
-mainCorner.Parent = mainBtn
+    local stroke = Instance.new("UIStroke", toggle)
+    stroke.Thickness = 3
+    stroke.Color = Color3.fromRGB(255, 210, 50)
 
--- Toggle menu
-mainBtn.MouseButton1Click:Connect(function()
-    frame.Visible = not frame.Visible
+    local state = false
+
+    toggle.MouseButton1Click:Connect(function()
+        state = not state
+        toggle.Text = text .. ": " .. (state and "ON" or "OFF")
+
+        TweenService:Create(toggle, TweenInfo.new(0.15), {
+            BackgroundColor3 = state and Color3.fromRGB(255, 210, 50)
+                or Color3.fromRGB(25, 100, 35)
+        }):Play()
+
+        callback(state)
+    end)
+end
+
+
+---------------------------------
+-- CADRE PRINCIPAL (STYLE IMAGE)
+---------------------------------
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 350, 0, 450)
+frame.Position = UDim2.new(0.05, 0, 0.25, 0)
+frame.BackgroundColor3 = Color3.fromRGB(25, 100, 35)
+
+local fcorner = Instance.new("UICorner", frame)
+fcorner.CornerRadius = UDim.new(0, 22)
+
+local fstroke = Instance.new("UIStroke", frame)
+fstroke.Thickness = 4
+fstroke.Color = Color3.fromRGB(255, 210, 50)
+
+
+---------------------------
+-- TITRE (SxwHub)
+---------------------------
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 55)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.GothamBlack
+title.Text = "SxwHub"
+title.TextSize = 32
+title.TextColor3 = Color3.fromRGB(255, 210, 50)
+
+
+-----------------------------
+-- LISTE ORDONNÉE DES BOUTONS
+-----------------------------
+local list = Instance.new("UIListLayout", frame)
+list.Padding = UDim.new(0, 12)
+list.HorizontalAlignment = Enum.HorizontalAlignment.Center
+list.SortOrder = Enum.SortOrder.LayoutOrder
+
+
+------------------------
+-- BOUTONS / FONCTIONS
+------------------------
+
+MakeToggle(frame, "Stealer", function(state)
+    print("Stealer:", state)
 end)
 
--- Ajouter les boutons d’options
-MakeBtn("Stealer", 10, frame, function()
-    print("Stealer clicked")
-end)
-MakeBtn("Instant TP", 60, frame, function()
-    print("Instant TP clicked")
-end)
-MakeBtn("Anti Hit", 110, frame, function()
-    print("Anti Hit clicked")
+MakeToggle(frame, "Instant TP", function(state)
+    print("Instant TP:", state)
 end)
 
-print("Sxw Hub Modern UI Loaded")
+MakeToggle(frame, "Anti Hit", function(state)
+    print("Anti Hit:", state)
+end)
 
+MakeBigButton(frame, "AUTRE OPTION", function()
+    print("Bouton custom")
+end)
+
+MakeBigButton(frame, "DISCORD", function()
+    setclipboard("discord.gg/tonserveur")
+    print("Discord copied!")
+end)
+
+print("SxwHub  Loaded!")
