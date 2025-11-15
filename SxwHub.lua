@@ -1,15 +1,15 @@
 --========================================================--
---              GHOSTFACE UI - WINDOWS BLUE               --
+--                SxwHub – Simple Modern UI               --
 --========================================================--
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
--- UI root
+-- UI Root
 local gui = Instance.new("ScreenGui")
 gui.Parent = game.CoreGui
 gui.ResetOnSpawn = false
-gui.Name = "GhostFaceUI"
+gui.Name = "SxwHubUI"
 
 if syn and syn.protect_gui then syn.protect_gui(gui) end
 
@@ -17,12 +17,12 @@ if syn and syn.protect_gui then syn.protect_gui(gui) end
 ------------------------------------------------------------
 --                    DRAGGING FUNCTION                    --
 ------------------------------------------------------------
-local function MakeDraggable(frame, dragbutton)
+local function MakeDraggable(frame, dragButton)
     local dragging = false
     local dragStart
     local startPos
 
-    dragbutton.InputBegan:Connect(function(input)
+    dragButton.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             dragStart = input.Position
@@ -30,14 +30,14 @@ local function MakeDraggable(frame, dragbutton)
         end
     end)
 
-    dragbutton.InputEnded:Connect(function(input)
+    dragButton.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
     end)
 
     UserInputService.InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
             local delta = input.Position - dragStart
             frame.Position = UDim2.new(
                 startPos.X.Scale,
@@ -51,76 +51,93 @@ end
 
 
 ------------------------------------------------------------
---                    GHOSTFACE BUTTON                     --
+--           HOLDER (permet au menu d’être mobile)         --
 ------------------------------------------------------------
-local logo = Instance.new("ImageButton")
-logo.Parent = gui
-logo.Size = UDim2.new(0, 70, 0, 70)
-logo.Position = UDim2.new(0.05, 0, 0.4, 0)
-logo.BackgroundTransparency = 1
-logo.Image = "rbxassetid://PUT_YOUR_IMAGE_ID_HERE"  -- MET TON ID ICI
-logo.AutoButtonColor = false
-
-local logoCorner = Instance.new("UICorner", logo)
-logoCorner.CornerRadius = UDim.new(1, 0)
+local holder = Instance.new("Frame")
+holder.Parent = gui
+holder.Size = UDim2.new(0, 200, 0, 50)
+holder.Position = UDim2.new(0.05, 0, 0.3, 0)
+holder.BackgroundTransparency = 1
 
 
 ------------------------------------------------------------
---                    MAIN PANEL (CARRE ARRONDI)          --
+--                  BOUTON PRINCIPAL SxwHub                --
 ------------------------------------------------------------
-local panel = Instance.new("Frame", gui)
-panel.Size = UDim2.new(0, 280, 0, 0)   -- fermé au début
-panel.Position = UDim2.new(0.05, 80, 0.4, 0)
-panel.BackgroundColor3 = Color3.fromRGB(13, 27, 42) -- Bleu foncé Windows
+local mainBtn = Instance.new("TextButton")
+mainBtn.Parent = holder
+mainBtn.Size = UDim2.new(0, 150, 0, 45)
+mainBtn.Position = UDim2.new(0, 0, 0, 0)
+mainBtn.BackgroundColor3 = Color3.fromRGB(13, 27, 42) -- Bleu foncé Windows
+mainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+mainBtn.Text = "SxwHub"
+mainBtn.Font = Enum.Font.GothamBold
+mainBtn.TextSize = 20
+mainBtn.BorderSizePixel = 0
+
+local mainCorner = Instance.new("UICorner", mainBtn)
+mainCorner.CornerRadius = UDim.new(0, 12)
+
+local mainStroke = Instance.new("UIStroke", mainBtn)
+mainStroke.Color = Color3.fromRGB(80, 150, 255)
+mainStroke.Thickness = 2
+
+
+------------------------------------------------------------
+--                     PANEL DÉROULANT                     --
+------------------------------------------------------------
+local panel = Instance.new("Frame")
+panel.Parent = holder
+panel.Size = UDim2.new(0, 150, 0, 0) -- Fermé au début
+panel.Position = UDim2.new(0, 0, 0, 50)
+panel.BackgroundColor3 = Color3.fromRGB(13, 27, 42)
 panel.BorderSizePixel = 0
 panel.ClipsDescendants = true
 
 local pCorner = Instance.new("UICorner", panel)
-pCorner.CornerRadius = UDim.new(0, 22)
+pCorner.CornerRadius = UDim.new(0, 12)
 
 local pStroke = Instance.new("UIStroke", panel)
-pStroke.Thickness = 3
-pStroke.Color = Color3.fromRGB(80, 150, 255) -- Bleu clair moderne
+pStroke.Color = Color3.fromRGB(80, 150, 255)
+pStroke.Thickness = 2
 
-
-------------------------------------------------------------
---                        MENU LIST                       --
-------------------------------------------------------------
 local list = Instance.new("UIListLayout", panel)
-list.Padding = UDim.new(0, 10)
+list.Padding = UDim.new(0, 8)
 list.HorizontalAlignment = Enum.HorizontalAlignment.Center
-list.SortOrder = Enum.SortOrder.LayoutOrder
 list.VerticalAlignment = Enum.VerticalAlignment.Top
+list.SortOrder = Enum.SortOrder.LayoutOrder
 
 
 ------------------------------------------------------------
---                   BOUTONS DU PANEL                     --
+--                BOUTON CRÉATEUR D'OPTIONS                --
 ------------------------------------------------------------
-local function CreateButton(txt, callback)
+local function AddButton(text, callback)
     local btn = Instance.new("TextButton")
     btn.Parent = panel
-    btn.Size = UDim2.new(1, -30, 0, 45)
+    btn.Size = UDim2.new(1, -10, 0, 35)
     btn.BackgroundColor3 = Color3.fromRGB(25, 65, 120)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Text = txt
-    btn.TextSize = 20
     btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 18
+    btn.Text = text
     btn.BorderSizePixel = 0
 
-    local c = Instance.new("UICorner", btn)
-    c.CornerRadius = UDim.new(0, 12)
+    local corner = Instance.new("UICorner", btn)
+    corner.CornerRadius = UDim.new(0, 10)
 
     btn.MouseButton1Click:Connect(callback)
 end
 
 
-CreateButton("Option 1", function() print("Clicked 1") end)
-CreateButton("Option 2", function() print("Clicked 2") end)
-CreateButton("Option 3", function() print("Clicked 3") end)
+------------------------------------------------------------
+--                     OPTIONS DU MENU                     --
+------------------------------------------------------------
+AddButton("Option 1", function() print("Option 1") end)
+AddButton("Option 2", function() print("Option 2") end)
+AddButton("Option 3", function() print("Option 3") end)
 
 
 ------------------------------------------------------------
---              MENU OPEN / CLOSE ANIMATION               --
+--             ANIMATION DU MENU (OUVERT/FERME)            --
 ------------------------------------------------------------
 local opened = false
 
@@ -130,25 +147,16 @@ local function ToggleMenu()
     TweenService:Create(
         panel,
         TweenInfo.new(0.25, Enum.EasingStyle.Quad),
-        { Size = opened and UDim2.new(0, 280, 0, 220) or UDim2.new(0, 280, 0, 0) }
+        { Size = opened and UDim2.new(0, 150, 0, 140) or UDim2.new(0, 150, 0, 0) }
     ):Play()
 end
 
-logo.MouseButton1Click:Connect(ToggleMenu)
+mainBtn.MouseButton1Click:Connect(ToggleMenu)
 
 
 ------------------------------------------------------------
---             MAKE MENU + LOGO DRAGGABLE TOGETHER        --
+--                 RENDRE LE TOUT DÉPLAÇABLE                --
 ------------------------------------------------------------
-local holder = Instance.new("Frame", gui)
-holder.Size = UDim2.new(0, 1, 0, 1)
-holder.BackgroundTransparency = 1
+MakeDraggable(holder, mainBtn)
 
-logo.Parent = holder
-panel.Parent = holder
-
-MakeDraggable(holder, logo)
-
-
-------------------------------------------------------------
-print("SxwHub Loaded successfully.")
+print("SxwHub UI Loaded ✔")
