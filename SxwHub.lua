@@ -61,7 +61,6 @@ holder.Position = UDim2.new(0, 10, 0, 10) -- coin supérieur gauche
 holder.BackgroundTransparency = 1
 holder.Parent = gui
 
--- Bouton principal
 local main = Instance.new("TextButton")
 main.Parent = holder
 main.Size = UDim2.new(0, 200, 0, 45)
@@ -74,7 +73,6 @@ main.Text = "SxwHub"
 
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
 
--- Panel
 local panel = Instance.new("Frame")
 panel.Parent = holder
 panel.Size = UDim2.new(0, 200, 0, 0)
@@ -118,37 +116,43 @@ local function Notify(msg)
 end
 
 ------------------------------------------------------------
---                ANTIHIT SCREEN UI                     
+--                ÉCRAN ANTIHIT (UI ONLY)                  
 ------------------------------------------------------------
 local function AntiHitScreen()
-    -- écran noir
     local blackScreen = Instance.new("Frame")
     blackScreen.Parent = gui
     blackScreen.Size = UDim2.new(1,0,1,0)
     blackScreen.BackgroundColor3 = Color3.fromRGB(0,0,0)
     blackScreen.ZIndex = 10
-    blackScreen.BackgroundTransparency = 0
+    blackScreen.BackgroundTransparency = 1
 
-    -- texte central
+    local fadeIn = TweenService:Create(blackScreen, TweenInfo.new(0.4), {BackgroundTransparency = 0})
+    fadeIn:Play()
+
     local text = Instance.new("TextLabel")
     text.Parent = blackScreen
     text.Size = UDim2.new(1,0,1,0)
     text.BackgroundTransparency = 1
     text.TextColor3 = Color3.fromRGB(255,255,255)
     text.Font = Enum.Font.GothamBlack
-    text.TextSize = 80
-    text.Text = "Sxw Desync"
     text.TextScaled = true
-    text.TextWrapped = true
+    text.Text = "Sxw Desync"
     text.ZIndex = 11
+    text.TextTransparency = 1
 
-    -- chargement 2 secondes
+    TweenService:Create(text, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+
     task.wait(2)
+
+    TweenService:Create(blackScreen, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(text, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
+
+    task.wait(0.5)
     blackScreen:Destroy()
 end
 
 ------------------------------------------------------------
---                    BOUTON GENERATOR                    
+--                    BOUTON GENERATOR                     
 ------------------------------------------------------------
 local function AddButton(text, color, callback)
     local btn = Instance.new("TextButton")
@@ -172,25 +176,24 @@ local function AddButton(text, color, callback)
 end
 
 ------------------------------------------------------------
---                     AJOUT DES OPTIONS                  
+--                     AJOUT DES OPTIONS                   
 ------------------------------------------------------------
 AddButton("Auto Steal")
 AddButton("Tp Base")
-AddButton("AntiHit", Color3.fromRGB(255, 140, 0), AntiHitScreen) -- bouton orange
 
--- Bouton TikTok rouge
+AddButton("AntiHit", Color3.fromRGB(255, 140, 0), AntiHitScreen)
+
 AddButton("TikTok: Sxxow700", Color3.fromRGB(255, 0, 0), function()
     Notify("TikTok: Sxxow700")
 end)
 
--- Bouton Brainrot (UI only)
 AddButton("Brainrot Locations", Color3.fromRGB(0, 170, 255), function()
-    local bestBrainrot = "Golden Brainrot" -- nom UI only
+    local bestBrainrot = "Golden Brainrot"
     Notify("Best value Brainrot: " .. bestBrainrot)
 end)
 
 ------------------------------------------------------------
---                     OUVERTURE PANEL                    
+--                     OUVERTURE PANEL                     
 ------------------------------------------------------------
 local opened = false
 main.MouseButton1Click:Connect(function()
@@ -203,8 +206,9 @@ main.MouseButton1Click:Connect(function()
 end)
 
 ------------------------------------------------------------
---                   DRAG DU MENU COMPLET                 
+--                   DRAG DU MENU COMPLET                  
 ------------------------------------------------------------
 MakeDraggable(holder, main)
 
 print("SxwHub UI Loaded (Clean Version)")
+
