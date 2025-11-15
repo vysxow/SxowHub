@@ -120,11 +120,11 @@ end
 ------------------------------------------------------------
 --                    BOUTON GENERATOR                    
 ------------------------------------------------------------
-local function AddButton(text, callback)
+local function AddButton(text, color, callback)
     local btn = Instance.new("TextButton")
     btn.Parent = panel
     btn.Size = UDim2.new(0.9, 0, 0, 38)
-    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+    btn.BackgroundColor3 = color or Color3.fromRGB(40, 40, 55)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBold
     btn.TextSize = 18
@@ -148,9 +148,14 @@ AddButton("Auto Steal")
 AddButton("Tp Base")
 AddButton("AntiHit")
 
--- Nouveau bouton TikTok
-AddButton("TikTok: Sxxow700", function()
+-- Bouton TikTok rouge
+AddButton("TikTok: Sxxow700", Color3.fromRGB(255, 0, 0), function()
     Notify("TikTok: Sxxow700")
+end)
+
+-- Bouton Brainrot (UI only)
+AddButton("Brainrot Locations", Color3.fromRGB(0, 170, 255), function()
+    Notify("Meilleurs Brainrot: Zone A, Zone B, Zone C")
 end)
 
 ------------------------------------------------------------
@@ -162,7 +167,7 @@ main.MouseButton1Click:Connect(function()
     TweenService:Create(
         panel,
         TweenInfo.new(0.25, Enum.EasingStyle.Quad),
-        {Size = opened and UDim2.new(0, 200, 0, 190) or UDim2.new(0, 200, 0, 0)}
+        {Size = opened and UDim2.new(0, 200, 0, 230) or UDim2.new(0, 200, 0, 0)}
     ):Play()
 end)
 
