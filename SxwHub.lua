@@ -118,7 +118,7 @@ end
 ------------------------------------------------------------
 --                ÉCRAN ANTIHIT (UI ONLY)                  
 ------------------------------------------------------------
-local function AntiHitScreen()
+local function AntiHitScreen(active)
     local blackScreen = Instance.new("Frame")
     blackScreen.Parent = gui
     blackScreen.Size = UDim2.new(1,0,1,0)
@@ -152,9 +152,42 @@ local function AntiHitScreen()
 end
 
 ------------------------------------------------------------
+--                BOOST FPS FUNCTION                       
+------------------------------------------------------------
+local function BoostFPS(active)
+    local settings = UserSettings():GetService("UserGameSettings")
+    if active then
+        settings.SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
+        game.Lighting.GlobalShadows = false
+        game.Lighting.EnvironmentDiffuseScale = 0
+        game.Lighting.EnvironmentSpecularScale = 0
+
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") then
+                v.Enabled = false
+            end
+        end
+        Notify("FPS Boost Activated")
+    else
+        settings.SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel5
+        game.Lighting.GlobalShadows = true
+        game.Lighting.EnvironmentDiffuseScale = 1
+        game.Lighting.EnvironmentSpecularScale = 1
+
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") then
+                v.Enabled = true
+            end
+        end
+        Notify("FPS Boost Deactivated")
+    end
+end
+
+------------------------------------------------------------
 --                    BOUTON GENERATOR                     
 ------------------------------------------------------------
-local function AddButton(text, color, callback)
+local function AddToggleButton(text, color, callback)
+    local active = false
     local btn = Instance.new("TextButton")
     btn.Parent = panel
     btn.Size = UDim2.new(0.9, 0, 0, 38)
@@ -167,30 +200,40 @@ local function AddButton(text, color, callback)
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 9)
 
     btn.MouseButton1Click:Connect(function()
-        if callback then
-            callback()
-        else
-            Notify(text .. " exécuté ✔")
-        end
+        active = not active
+        callback(active)
     end)
 end
 
 ------------------------------------------------------------
 --                     AJOUT DES OPTIONS                   
 ------------------------------------------------------------
-AddButton("Auto Steal")
-AddButton("Tp Base")
+AddToggleButton("Auto Steal", Color3.fromRGB(50,150,50), function(active)
+    Notify("Auto Steal " .. (active and "ON" or "OFF"))
+end)
 
-AddButton("AntiHit", Color3.fromRGB(255, 140, 0), AntiHitScreen)
+AddToggleButton("Tp Base", Color3.fromRGB(50,150,200), function(active)
+    Notify("Tp Base " .. (active and "ON" or "OFF"))
+end)
 
-AddButton("TikTok: Sxxow700", Color3.fromRGB(255, 0, 0), function()
+AddToggleButton("AntiHit", Color3.fromRGB(255,140,0), function(active)
+    if active then
+        AntiHitScreen(true)
+    else
+        Notify("AntiHit OFF")
+    end
+end)
+
+AddToggleButton("TikTok: Sxxow700", Color3.fromRGB(255,0,0), function(active)
     Notify("TikTok: Sxxow700")
 end)
 
-AddButton("Brainrot Locations", Color3.fromRGB(0, 170, 255), function()
+AddToggleButton("Brainrot Locations", Color3.fromRGB(0,170,255), function(active)
     local bestBrainrot = "Golden Brainrot"
     Notify("Best value Brainrot: " .. bestBrainrot)
 end)
+
+AddToggleButton("Boost FPS", Color3.fromRGB(0,255,0), BoostFPS)
 
 ------------------------------------------------------------
 --                     OUVERTURE PANEL                     
@@ -201,7 +244,7 @@ main.MouseButton1Click:Connect(function()
     TweenService:Create(
         panel,
         TweenInfo.new(0.25, Enum.EasingStyle.Quad),
-        {Size = opened and UDim2.new(0, 200, 0, 230) or UDim2.new(0, 200, 0, 0)}
+        {Size = opened and UDim2.new(0, 200, 0, 300) or UDim2.new(0, 200, 0, 0)}
     ):Play()
 end)
 
@@ -210,5 +253,5 @@ end)
 ------------------------------------------------------------
 MakeDraggable(holder, main)
 
-print("SxwHub UI Loaded (Clean Version)")
+print("SxwHub UI Loaded (Clean Version with Toggle Buttons)")
 
