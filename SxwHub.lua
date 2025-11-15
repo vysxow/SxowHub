@@ -53,11 +53,11 @@ local function MakeDraggable(frame, drag)
 end
 
 ------------------------------------------------------------
---                      UI PRINCIPAL                      
+--                      UI PRINCIPAL                       
 ------------------------------------------------------------
 local holder = Instance.new("Frame")
 holder.Size = UDim2.new(0, 210, 0, 50)
-holder.Position = UDim2.new(0.4, 0, 0.25, 0) -- meilleure position
+holder.Position = UDim2.new(0, 10, 0, 10) -- coin supérieur gauche
 holder.BackgroundTransparency = 1
 holder.Parent = gui
 
@@ -65,8 +65,8 @@ holder.Parent = gui
 local main = Instance.new("TextButton")
 main.Parent = holder
 main.Size = UDim2.new(0, 200, 0, 45)
-main.Position = UDim2.new(0.5, -100, 0, 0)
-main.BackgroundColor3 = Color3.fromRGB(28, 28, 38) -- plus joli
+main.Position = UDim2.new(0, 0, 0, 0)
+main.BackgroundColor3 = Color3.fromRGB(28, 28, 38)
 main.TextColor3 = Color3.fromRGB(255, 255, 255)
 main.Font = Enum.Font.GothamBold
 main.TextSize = 22
@@ -78,7 +78,7 @@ Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
 local panel = Instance.new("Frame")
 panel.Parent = holder
 panel.Size = UDim2.new(0, 200, 0, 0)
-panel.Position = UDim2.new(0.5, -100, 0, 50)
+panel.Position = UDim2.new(0, 0, 0, 50)
 panel.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
 panel.ClipsDescendants = true
 
@@ -89,7 +89,7 @@ list.Padding = UDim.new(0, 6)
 list.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
 ------------------------------------------------------------
---                        NOTIFS                          
+--                        NOTIFS                           
 ------------------------------------------------------------
 local function Notify(msg)
     local n = Instance.new("TextLabel")
@@ -120,7 +120,7 @@ end
 ------------------------------------------------------------
 --                    BOUTON GENERATOR                    
 ------------------------------------------------------------
-local function AddButton(text)
+local function AddButton(text, callback)
     local btn = Instance.new("TextButton")
     btn.Parent = panel
     btn.Size = UDim2.new(0.9, 0, 0, 38)
@@ -133,7 +133,11 @@ local function AddButton(text)
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 9)
 
     btn.MouseButton1Click:Connect(function()
-        Notify(text .. " exécuté ✔")
+        if callback then
+            callback()
+        else
+            Notify(text .. " exécuté ✔")
+        end
     end)
 end
 
@@ -144,6 +148,11 @@ AddButton("Auto Steal")
 AddButton("Tp Base")
 AddButton("AntiHit")
 
+-- Nouveau bouton TikTok
+AddButton("TikTok: Sxxow700", function()
+    Notify("TikTok: Sxxow700")
+end)
+
 ------------------------------------------------------------
 --                     OUVERTURE PANEL                    
 ------------------------------------------------------------
@@ -153,7 +162,7 @@ main.MouseButton1Click:Connect(function()
     TweenService:Create(
         panel,
         TweenInfo.new(0.25, Enum.EasingStyle.Quad),
-        {Size = opened and UDim2.new(0, 200, 0, 140) or UDim2.new(0, 200, 0, 0)}
+        {Size = opened and UDim2.new(0, 200, 0, 190) or UDim2.new(0, 200, 0, 0)}
     ):Play()
 end)
 
