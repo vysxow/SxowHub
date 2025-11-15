@@ -1,5 +1,5 @@
 --========================================================--
---                SxwHub – Simple Modern UI               --
+--                SxwHub – Modern Draggable UI            --
 --========================================================--
 
 local TweenService = game:GetService("TweenService")
@@ -15,17 +15,16 @@ if syn and syn.protect_gui then syn.protect_gui(gui) end
 
 
 ------------------------------------------------------------
---                    DRAGGING FUNCTION                    --
+--                DRAG SYSTEM (MOBILE MENU)               --
 ------------------------------------------------------------
 local function MakeDraggable(frame, dragButton)
     local dragging = false
-    local dragStart
-    local startPos
+    local dragStart, startPos
 
     dragButton.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
-            dragStart = input.Position
+            dragStart = Vector2.new(input.Position.X, input.Position.Y)
             startPos = frame.Position
         end
     end)
@@ -37,8 +36,9 @@ local function MakeDraggable(frame, dragButton)
     end)
 
     UserInputService.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
-            local delta = input.Position - dragStart
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = Vector2.new(input.Position.X, input.Position.Y) - dragStart
+
             frame.Position = UDim2.new(
                 startPos.X.Scale,
                 startPos.X.Offset + delta.X,
@@ -51,7 +51,7 @@ end
 
 
 ------------------------------------------------------------
---           HOLDER (permet au menu d’être mobile)         --
+--                      ROOT HOLDER                       --
 ------------------------------------------------------------
 local holder = Instance.new("Frame")
 holder.Parent = gui
@@ -132,8 +132,8 @@ end
 --                     OPTIONS DU MENU                     --
 ------------------------------------------------------------
 AddButton("Auto Steal", function() print("Auto Steal") end)
-AddButton("tp base", function() print("tp base") end)
-AddButton("Anti Hit", function() print("Anti Hit") end)
+AddButton("Tp Base", function() print("Tp Base") end)
+AddButton("AntiHit", function() print("AntiHit") end)
 
 
 ------------------------------------------------------------
@@ -155,9 +155,8 @@ mainBtn.MouseButton1Click:Connect(ToggleMenu)
 
 
 ------------------------------------------------------------
---                 RENDRE LE TOUT DÉPLAÇABLE                --
+--                 RENDRE LE MENU MOBILE                   --
 ------------------------------------------------------------
 MakeDraggable(holder, mainBtn)
 
 print("SxwHub UI Loaded ✔")
-
