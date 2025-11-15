@@ -67,7 +67,7 @@ local mainBtn = Instance.new("TextButton")
 mainBtn.Parent = holder
 mainBtn.Size = UDim2.new(0, 150, 0, 45)
 mainBtn.Position = UDim2.new(0, 0, 0, 0)
-mainBtn.BackgroundColor3 = Color3.fromRGB(13, 27, 42) -- Bleu foncé Windows
+mainBtn.BackgroundColor3 = Color3.fromRGB(13, 27, 42)
 mainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 mainBtn.Text = "SxwHub"
 mainBtn.Font = Enum.Font.GothamBold
@@ -87,7 +87,7 @@ mainStroke.Thickness = 2
 ------------------------------------------------------------
 local panel = Instance.new("Frame")
 panel.Parent = holder
-panel.Size = UDim2.new(0, 150, 0, 0) -- Fermé au début
+panel.Size = UDim2.new(0, 150, 0, 0)
 panel.Position = UDim2.new(0, 0, 0, 50)
 panel.BackgroundColor3 = Color3.fromRGB(13, 27, 42)
 panel.BorderSizePixel = 0
