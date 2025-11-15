@@ -1,24 +1,31 @@
 --========================================================--
---             SxwHub – Modern UI + Notifications         --
+--                 SxwHub UI (CLEAN VERSION)              --
 --========================================================--
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
+-- GUI SÛR ET COMPATIBLE
 local gui = Instance.new("ScreenGui")
-gui.Parent = game.CoreGui
-gui.ResetOnSpawn = false
 gui.Name = "SxwHubUI"
-if syn and syn.protect_gui then syn.protect_gui(gui) end
+gui.ResetOnSpawn = false
 
+if syn and syn.protect_gui then 
+    syn.protect_gui(gui)
+    gui.Parent = game.CoreGui
+elseif gethui then
+    gui.Parent = gethui()
+else
+    gui.Parent = game.CoreGui
+end
 
 ------------------------------------------------------------
---                     DRAGGING SYSTEM                     --
+--                DRAGGING (PARFAITEMENT FLUIDE)          
 ------------------------------------------------------------
-local function MakeDraggable(frame, dragButton)
+local function MakeDraggable(frame, drag)
     local dragging, dragStart, startPos = false, nil, nil
 
-    dragButton.InputBegan:Connect(function(input)
+    drag.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             dragStart = input.Position
@@ -26,7 +33,7 @@ local function MakeDraggable(frame, dragButton)
         end
     end)
 
-    dragButton.InputEnded:Connect(function(input)
+    drag.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
@@ -45,137 +52,114 @@ local function MakeDraggable(frame, dragButton)
     end)
 end
 
-
 ------------------------------------------------------------
---                        HOLDER                           --
+--                      UI PRINCIPAL                      
 ------------------------------------------------------------
 local holder = Instance.new("Frame")
-holder.Parent = gui
-holder.Size = UDim2.new(0, 200, 0, 50)
-holder.Position = UDim2.new(0.5, -100, 0.2, 0)  -- placé proprement au centre
+holder.Size = UDim2.new(0, 210, 0, 50)
+holder.Position = UDim2.new(0.4, 0, 0.25, 0) -- meilleure position
 holder.BackgroundTransparency = 1
+holder.Parent = gui
 
+-- Bouton principal
+local main = Instance.new("TextButton")
+main.Parent = holder
+main.Size = UDim2.new(0, 200, 0, 45)
+main.Position = UDim2.new(0.5, -100, 0, 0)
+main.BackgroundColor3 = Color3.fromRGB(28, 28, 38) -- plus joli
+main.TextColor3 = Color3.fromRGB(255, 255, 255)
+main.Font = Enum.Font.GothamBold
+main.TextSize = 22
+main.Text = "SxwHub"
 
-------------------------------------------------------------
---                     MAIN BUTTON                         --
-------------------------------------------------------------
-local mainBtn = Instance.new("TextButton")
-mainBtn.Parent = holder
-mainBtn.Size = UDim2.new(0, 180, 0, 45)
-mainBtn.Position = UDim2.new(0.5, -90, 0, 0)
-mainBtn.BackgroundColor3 = Color3.fromRGB(13, 27, 42)
-mainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-mainBtn.Text = "SxwHub"
-mainBtn.Font = Enum.Font.GothamBold
-mainBtn.TextSize = 20
-mainBtn.BorderSizePixel = 0
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
 
-Instance.new("UICorner", mainBtn).CornerRadius = UDim.new(0, 12)
-local mainStroke = Instance.new("UIStroke", mainBtn)
-mainStroke.Color = Color3.fromRGB(80, 150, 255)
-mainStroke.Thickness = 2
-
-
-------------------------------------------------------------
---                     DROP-DOWN PANEL                     --
-------------------------------------------------------------
+-- Panel
 local panel = Instance.new("Frame")
 panel.Parent = holder
-panel.Size = UDim2.new(0, 180, 0, 0)
-panel.Position = UDim2.new(0.5, -90, 0, 55)
-panel.BackgroundColor3 = Color3.fromRGB(13, 27, 42)
-panel.BorderSizePixel = 0
+panel.Size = UDim2.new(0, 200, 0, 0)
+panel.Position = UDim2.new(0.5, -100, 0, 50)
+panel.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
 panel.ClipsDescendants = true
 
 Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 12)
-local pStroke = Instance.new("UIStroke", panel)
-pStroke.Color = Color3.fromRGB(80, 150, 255)
-pStroke.Thickness = 2
 
 local list = Instance.new("UIListLayout", panel)
-list.Padding = UDim.new(0, 8)
+list.Padding = UDim.new(0, 6)
 list.HorizontalAlignment = Enum.HorizontalAlignment.Center
-list.VerticalAlignment = Enum.VerticalAlignment.Top
-list.SortOrder = Enum.SortOrder.LayoutOrder
-
 
 ------------------------------------------------------------
---                    NOTIFICATION SYSTEM                  --
+--                        NOTIFS                          
 ------------------------------------------------------------
 local function Notify(msg)
-    local notif = Instance.new("TextLabel")
-    notif.Parent = gui
-    notif.Size = UDim2.new(0, 260, 0, 40)
-    notif.Position = UDim2.new(0.5, -130, 1, -80)
-    notif.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    notif.TextColor3 = Color3.fromRGB(255, 255, 255)
-    notif.Text = msg
-    notif.Font = Enum.Font.GothamBold
-    notif.TextSize = 18
-    notif.BorderSizePixel = 0
+    local n = Instance.new("TextLabel")
+    n.Parent = gui
+    n.Size = UDim2.new(0, 260, 0, 40)
+    n.Position = UDim2.new(1, -280, 1, -80)
+    n.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+    n.TextColor3 = Color3.fromRGB(255, 255, 255)
+    n.Font = Enum.Font.GothamBold
+    n.TextSize = 18
+    n.Text = msg
 
-    Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", n).CornerRadius = UDim.new(0, 10)
 
-    TweenService:Create(notif, TweenInfo.new(0.3), {Position = UDim2.new(0.5, -130, 1, -120)}):Play()
-    task.wait(1.8)
-    TweenService:Create(notif, TweenInfo.new(0.3), {Position = UDim2.new(0.5, -130, 1, -60)}):Play()
-    task.wait(0.2)
-    notif:Destroy()
+    TweenService:Create(n, TweenInfo.new(0.4), {
+        Position = UDim2.new(1, -280, 1, -130)
+    }):Play()
+
+    task.wait(2)
+    TweenService:Create(n, TweenInfo.new(0.4), {
+        Position = UDim2.new(1, -280, 1, -50)
+    }):Play()
+
+    task.wait(0.3)
+    n:Destroy()
 end
 
-
 ------------------------------------------------------------
---                     MENU BUTTON CREATOR                 --
+--                    BOUTON GENERATOR                    
 ------------------------------------------------------------
-local function AddButton(text, callback)
+local function AddButton(text)
     local btn = Instance.new("TextButton")
     btn.Parent = panel
-    btn.Size = UDim2.new(1, -10, 0, 35)
-    btn.BackgroundColor3 = Color3.fromRGB(25, 65, 120)
+    btn.Size = UDim2.new(0.9, 0, 0, 38)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBold
     btn.TextSize = 18
     btn.Text = text
-    btn.BorderSizePixel = 0
 
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 9)
 
     btn.MouseButton1Click:Connect(function()
-        Notify(text .. " activé ✔")
-        callback()
+        Notify(text .. " exécuté ✔")
     end)
 end
 
+------------------------------------------------------------
+--                     AJOUT DES OPTIONS                  
+------------------------------------------------------------
+AddButton("Auto Steal")
+AddButton("Tp Base")
+AddButton("AntiHit")
 
 ------------------------------------------------------------
---                     MENU OPTIONS                        --
-------------------------------------------------------------
-AddButton("Auto Steal", function() print("Auto Steal") end)
-AddButton("Tp Base", function() print("Tp Base") end)
-AddButton("AntiHit", function() print("AntiHit") end)
-
-
-------------------------------------------------------------
---                  MENU OPEN / CLOSE                     --
+--                     OUVERTURE PANEL                    
 ------------------------------------------------------------
 local opened = false
-
-local function ToggleMenu()
+main.MouseButton1Click:Connect(function()
     opened = not opened
-
     TweenService:Create(
         panel,
         TweenInfo.new(0.25, Enum.EasingStyle.Quad),
-        {Size = opened and UDim2.new(0, 180, 0, 150) or UDim2.new(0, 180, 0, 0)}
+        {Size = opened and UDim2.new(0, 200, 0, 140) or UDim2.new(0, 200, 0, 0)}
     ):Play()
-end
-
-mainBtn.MouseButton1Click:Connect(ToggleMenu)
-
+end)
 
 ------------------------------------------------------------
---                      MAKE DRAGGABLE                    --
+--                   DRAG DU MENU COMPLET                 
 ------------------------------------------------------------
-MakeDraggable(holder, mainBtn)
+MakeDraggable(holder, main)
 
-print("SxwHub UI Loaded ✔")
+print("SxwHub UI Loaded (Clean Version)")
