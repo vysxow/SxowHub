@@ -131,9 +131,9 @@ end
 ------------------------------------------------------------
 --                     OPTIONS DU MENU                     --
 ------------------------------------------------------------
-AddButton("Option 1", function() print("Option 1") end)
-AddButton("Option 2", function() print("Option 2") end)
-AddButton("Option 3", function() print("Option 3") end)
+AddButton("Auto Steal", function() print("Auto Steal") end)
+AddButton("tp base", function() print("tp base") end)
+AddButton("Anti Hit", function() print("Anti Hit") end)
 
 
 ------------------------------------------------------------
@@ -160,3 +160,4 @@ mainBtn.MouseButton1Click:Connect(ToggleMenu)
 MakeDraggable(holder, mainBtn)
 
 print("SxwHub UI Loaded ✔")
+
