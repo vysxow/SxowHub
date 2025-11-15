@@ -118,6 +118,36 @@ local function Notify(msg)
 end
 
 ------------------------------------------------------------
+--                ANTIHIT SCREEN UI                     
+------------------------------------------------------------
+local function AntiHitScreen()
+    -- écran noir
+    local blackScreen = Instance.new("Frame")
+    blackScreen.Parent = gui
+    blackScreen.Size = UDim2.new(1,0,1,0)
+    blackScreen.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    blackScreen.ZIndex = 10
+    blackScreen.BackgroundTransparency = 0
+
+    -- texte central
+    local text = Instance.new("TextLabel")
+    text.Parent = blackScreen
+    text.Size = UDim2.new(1,0,1,0)
+    text.BackgroundTransparency = 1
+    text.TextColor3 = Color3.fromRGB(255,255,255)
+    text.Font = Enum.Font.GothamBlack
+    text.TextSize = 80
+    text.Text = "Sxw Desync"
+    text.TextScaled = true
+    text.TextWrapped = true
+    text.ZIndex = 11
+
+    -- chargement 2 secondes
+    task.wait(2)
+    blackScreen:Destroy()
+end
+
+------------------------------------------------------------
 --                    BOUTON GENERATOR                    
 ------------------------------------------------------------
 local function AddButton(text, color, callback)
@@ -146,7 +176,7 @@ end
 ------------------------------------------------------------
 AddButton("Auto Steal")
 AddButton("Tp Base")
-AddButton("AntiHit")
+AddButton("AntiHit", Color3.fromRGB(255, 140, 0), AntiHitScreen) -- bouton orange
 
 -- Bouton TikTok rouge
 AddButton("TikTok: Sxxow700", Color3.fromRGB(255, 0, 0), function()
@@ -155,7 +185,8 @@ end)
 
 -- Bouton Brainrot (UI only)
 AddButton("Brainrot Locations", Color3.fromRGB(0, 170, 255), function()
-    Notify("Meilleurs Brainrot: Zone A, Zone B, Zone C")
+    local bestBrainrot = "Golden Brainrot" -- nom UI only
+    Notify("Best value Brainrot: " .. bestBrainrot)
 end)
 
 ------------------------------------------------------------
